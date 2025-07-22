@@ -1,0 +1,15 @@
+/* src/App.css */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f4f4;
+}
+
+.app {
+  padding: 2rem;
+  text-align: center;
+}
+
+.error {
+  color: red;
+}

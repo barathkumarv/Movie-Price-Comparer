@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  movie-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - MovieApi__Token=${MovieApi__Token}
