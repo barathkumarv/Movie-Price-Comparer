@@ -72,7 +72,10 @@ scrape_configs:
     metrics_path: '/metrics'  # Your app's metrics endpoint
     scrape_interval: 10s
 
+## Run the application
 
+
+docker compose up --build
 
 ## Run Tests
 
