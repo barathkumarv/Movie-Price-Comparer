@@ -16,7 +16,7 @@ Compare movie prices from 2 providers - Cinemaworld and Filmworld to find the ch
 
 ## Tech Stack
 
-- ASP.NET Core 9.0 (.NET Backend)
+- ASP.NET Core 9.0
   - Providers injected using configuration
   - Standard resilience handler (polly) to handle any transient errors, mainly retries
   - Prometheus metrics
@@ -48,10 +48,10 @@ For production it is recommened to use Azure Key Vault or AWS Secrets Manager de
 ## Metrics with Prometheus
 
 -Metrics - 
-# HELP movie_api_duration_seconds Movie API call duration
-# TYPE movie_api_duration_seconds histogram
-# HELP movie_api_errors_total Movie API errors
-# TYPE movie_api_errors_total counter
+- HELP movie_api_duration_seconds Movie API call duration
+- TYPE movie_api_duration_seconds histogram
+- HELP movie_api_errors_total Movie API errors
+- TYPE movie_api_errors_total counter
 
 
 
