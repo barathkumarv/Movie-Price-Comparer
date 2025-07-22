@@ -53,7 +53,11 @@ For production it is recommened to use Azure Key Vault or AWS Secrets Manager de
 - HELP movie_api_errors_total Movie API errors
 - TYPE movie_api_errors_total counter
 
-Prometheus config example to scrape oour app
+## Prometheus Configuration
+
+Create a `prometheus.yml` file:
+
+```yaml
 global:
   scrape_interval: 15s
 
