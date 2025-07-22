@@ -4,10 +4,10 @@ Compare movie prices from 2 providers - Cinemaworld and Filmworld to find the ch
 ---
 
 # Access endpoints:
-# - Swagger UI: https://localhost:8080/swagger/index.html
-# - Health Check: https://localhost:8080/health
-# - Metrics: https://localhost:8080/metrics
-# - Movies API: https://localhost:8080/api/movies
+ - Swagger UI: https://localhost:8080/swagger/index.html
+ - Health Check: https://localhost:8080/health
+ - Metrics: https://localhost:8080/metrics
+ - Movies API: https://localhost:8080/api/movies
 
 # Movie Price Comparison App
 
