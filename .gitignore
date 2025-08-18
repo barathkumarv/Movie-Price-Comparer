@@ -1,1 +1,73 @@
+##############################
+# OS / General
+##############################
+
+.DS_Store
+Thumbs.db
+*.log
+
+##############################
+# Node / React
+##############################
+
+# Node dependencies
+**/node_modules/
+
+# React build output
+**/build/
+
+# dotenv environment files
 .env
+.env.*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# React diagnostics
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+##############################
+# .NET Core / Visual Studio
+##############################
+
+# Build output
+**/bin/
+**/obj/
+
+# Rider & VS Code settings
+.idea/
+.vscode/
+
+# VS-specific
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vsp
+*.vspscc
+*.vssscc
+*.dbmdl
+
+# ASP.NET Core local secrets
+**/secrets.json
+**/appsettings.Development.json
+
+##############################
+# Others
+##############################
+
+# Optional lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Local tools / test output
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MoviePriceComparer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d335d6a615de8f1306fa3dd2e5d70a9886b0e9b3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5cb2bb73c582308c4b7e2dfbd9d56ba9b4b1baa8")]
 [assembly: System.Reflection.AssemblyProductAttribute("MoviePriceComparer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MoviePriceComparer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
