@@ -53,8 +53,29 @@ For production it is recommened to use Azure Key Vault or AWS Secrets Manager de
 - HELP movie_api_errors_total Movie API errors
 - TYPE movie_api_errors_total counter
 
+## Prometheus Configuration
+
+Create a `prometheus.yml` file:
+
+```yaml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'your-app'
+    static_configs:
+      - targets: ['your-app:8080']  # Use service name from docker-compose
+    metrics_path: '/metrics'  # Your app's metrics endpoint
+    scrape_interval: 10s
+
+## Run the application
 
 
+docker compose up --build
 
 ## Run Tests
 

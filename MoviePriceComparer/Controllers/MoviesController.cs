@@ -22,9 +22,8 @@ namespace MoviePriceComparer.Controllers
         }
 
         /// <summary>
-        /// Get a specific movie comparison by ID
+        /// Get movie price comparisions for all providers
         /// </summary>
-        /// <param name="id">Movie ID</param>
         /// <returns>Movie comparison details</returns>
         [HttpGet]
         public async Task<ActionResult<ApiResponse<MovieComparison>>> GetMovieComparisonAsync()
