@@ -118,7 +118,7 @@ public class MovieApiClient : IMovieApiClient
 
     public async Task<ApiResponse<MovieDetail>> GetMovieDetailsAsync(string movieId, string baseUrl)
     {
-        using var timer = ApiDuration.WithLabels(movieId, "movies").NewTimer();
+        using var timer = ApiDuration.WithLabels(movieId, "details").NewTimer();
 
         _logger.LogInformation("Fetching movie details for {MovieId} from {BaseUrl}", movieId, baseUrl);
 

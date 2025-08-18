@@ -92,3 +92,4 @@ C:\Barath\MoviePriceComparer\MoviePriceComparer\obj\Debug\net9.0\refint\MoviePri
 C:\Barath\MoviePriceComparer\MoviePriceComparer\obj\Debug\net9.0\MoviePriceComparer.pdb
 C:\Barath\MoviePriceComparer\MoviePriceComparer\obj\Debug\net9.0\MoviePriceComparer.genruntimeconfig.cache
 C:\Barath\MoviePriceComparer\MoviePriceComparer\obj\Debug\net9.0\ref\MoviePriceComparer.dll
+C:\Barath\MoviePriceComparer\MoviePriceComparer\obj\Debug\net9.0\MoviePriceComparer.sourcelink.json

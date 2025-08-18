@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   movie-app:
     build: .
@@ -7,3 +8,194 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - MovieApi__Token=${MovieApi__Token}
+    networks:
+      - monitoring
+
+  # Init container to create Prometheus config
+  prometheus-config-init:
+    image: alpine:latest
+    volumes:
+      - prometheus_config:/config
+    command: |
+      sh -c "
+      cat > /config/prometheus.yml <<EOF
+      global:
+        scrape_interval: 15s
+        evaluation_interval: 15s
+      scrape_configs:
+        - job_name: 'movie-app'
+          static_configs:
+            - targets: ['movie-app:8080']
+          scrape_interval: 10s
+          metrics_path: '/metrics'
+          scheme: http
+      EOF
+      "
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_config:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    depends_on:
+      - prometheus-config-init
+    networks:
+      - monitoring
+
+  # Init container to create Grafana configs
+  grafana-config-init:
+    image: alpine:latest
+    volumes:
+      - grafana_provisioning:/etc/grafana/provisioning
+      - grafana_dashboards:/var/lib/grafana/dashboards
+    command: |
+      sh -c "
+      mkdir -p /etc/grafana/provisioning/datasources /etc/grafana/provisioning/dashboards
+      
+      # Create datasource config
+      cat > /etc/grafana/provisioning/datasources/prometheus.yml <<EOF
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          access: proxy
+          url: http://prometheus:9090
+          isDefault: true
+      EOF
+      
+      # Create dashboard provider config
+      cat > /etc/grafana/provisioning/dashboards/dashboard.yml <<EOF
+      apiVersion: 1
+      providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          updateIntervalSeconds: 10
+          allowUiUpdates: true
+          options:
+            path: /var/lib/grafana/dashboards
+      EOF
+      
+      # Create dashboard JSON (simplified format)
+      cat > /var/lib/grafana/dashboards/movie-api.json <<EOF
+      {
+        \"id\": null,
+        \"title\": \"Movie API Performance Dashboard\",
+        \"tags\": [\"movie-api\"],
+        \"timezone\": \"browser\",
+        \"refresh\": \"30s\",
+        \"time\": {
+          \"from\": \"now-1h\",
+          \"to\": \"now\"
+        },
+        \"panels\": [
+          {
+            \"id\": 1,
+            \"title\": \"Average Response Time\",
+            \"type\": \"stat\",
+            \"gridPos\": {\"h\": 8, \"w\": 12, \"x\": 0, \"y\": 0},
+            \"targets\": [
+              {
+                \"expr\": \"rate(movie_api_duration_seconds_sum[5m]) / rate(movie_api_duration_seconds_count[5m])\",
+                \"legendFormat\": \"Avg Response Time\",
+                \"refId\": \"A\"
+              }
+            ],
+            \"fieldConfig\": {
+              \"defaults\": {
+                \"unit\": \"s\",
+                \"decimals\": 3
+              }
+            }
+          },
+          {
+            \"id\": 2,
+            \"title\": \"Request Rate\",
+            \"type\": \"stat\",
+            \"gridPos\": {\"h\": 8, \"w\": 12, \"x\": 12, \"y\": 0},
+            \"targets\": [
+              {
+                \"expr\": \"rate(movie_api_duration_seconds_count[5m])\",
+                \"legendFormat\": \"Requests/sec\",
+                \"refId\": \"A\"
+              }
+            ],
+            \"fieldConfig\": {
+              \"defaults\": {
+                \"unit\": \"reqps\",
+                \"decimals\": 2
+              }
+            }
+          },
+          {
+            \"id\": 3,
+            \"title\": \"Response Time Percentiles\",
+            \"type\": \"timeseries\",
+            \"gridPos\": {\"h\": 8, \"w\": 24, \"x\": 0, \"y\": 8},
+            \"targets\": [
+              {
+                \"expr\": \"histogram_quantile(0.50, rate(movie_api_duration_seconds_bucket[5m]))\",
+                \"legendFormat\": \"50th percentile\",
+                \"refId\": \"A\"
+              },
+              {
+                \"expr\": \"histogram_quantile(0.95, rate(movie_api_duration_seconds_bucket[5m]))\",
+                \"legendFormat\": \"95th percentile\",
+                \"refId\": \"B\"
+              },
+              {
+                \"expr\": \"histogram_quantile(0.99, rate(movie_api_duration_seconds_bucket[5m]))\",
+                \"legendFormat\": \"99th percentile\",
+                \"refId\": \"C\"
+              }
+            ],
+            \"fieldConfig\": {
+              \"defaults\": {
+                \"unit\": \"s\"
+              }
+            }
+          }
+        ]
+      }
+      EOF
+      "
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_provisioning:/etc/grafana/provisioning
+      - grafana_dashboards:/var/lib/grafana/dashboards
+    depends_on:
+      - grafana-config-init
+      - prometheus
+    networks:
+      - monitoring
+
+volumes:
+  prometheus_config:
+  prometheus_data:
+  grafana_data:
+  grafana_provisioning:
+  grafana_dashboards:
+
+networks:
+  monitoring:
+    driver: bridge
